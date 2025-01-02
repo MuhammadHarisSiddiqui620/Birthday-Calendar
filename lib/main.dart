@@ -1,7 +1,21 @@
+import 'package:birthday_calendor/Models/birthday_model.dart';
 import 'package:birthday_calendor/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(
+      BirthdayModelAdapter()); // Register the generated adapter
+
+/*  if (!Hive.isBoxOpen('alarm-db')) {
+    var box = await Hive.openBox<AlarmModel>('alarm-db');
+    await box.clear(); // Only clear if successfully opened
+  }*/
+
+  await Hive.openBox<BirthdayModel>('birthday-db'); //
+
   runApp(const MyApp());
 }
 
