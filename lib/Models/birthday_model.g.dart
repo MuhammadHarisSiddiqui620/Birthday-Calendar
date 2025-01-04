@@ -17,27 +17,30 @@ class BirthdayModelAdapter extends TypeAdapter<BirthdayModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BirthdayModel(
-      name: fields[0] as String,
-      date: fields[1] as String,
-      alarmDay: fields[2] as String,
-      giftList: (fields[3] as List).cast<String>(),
-      image: fields[4] as String,
+      DeviceName: fields[0] as String,
+      birthdayName: fields[1] as String,
+      date: fields[2] as String,
+      alarmDay: fields[3] as String,
+      giftList: (fields[4] as List).cast<String>(),
+      image: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, BirthdayModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.DeviceName)
       ..writeByte(1)
-      ..write(obj.date)
+      ..write(obj.birthdayName)
       ..writeByte(2)
-      ..write(obj.alarmDay)
+      ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.giftList)
+      ..write(obj.alarmDay)
       ..writeByte(4)
+      ..write(obj.giftList)
+      ..writeByte(5)
       ..write(obj.image);
   }
 

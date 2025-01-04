@@ -3,6 +3,7 @@ import 'package:birthday_calendor/Screens/MainScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class Username extends StatelessWidget {
   const Username({super.key});
@@ -37,6 +38,7 @@ class Username extends StatelessWidget {
                     style: secondaryTextStyle,
                   ),
                   TextField(
+                    controller: nameController,
                     style: TextStyle(fontSize: 16),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
@@ -57,13 +59,18 @@ class Username extends StatelessWidget {
                   ),
                   ElevatedButton(
                     style: primaryButton,
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BaseScreen(),
-                        ),
-                      );
+                    onPressed: () async {
+                      final name = nameController.text.trim();
+                      if (name.isNotEmpty) {
+                        final box = await Hive.openBox('userBox');
+                        await box.put('DeviceName', name); // Save DeviceName
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BaseScreen(),
+                          ),
+                        );
+                      }
                     },
                     child: Text(
                       'Save',

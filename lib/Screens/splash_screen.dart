@@ -1,9 +1,10 @@
 import 'package:birthday_calendor/constants.dart';
 import 'package:birthday_calendor/screens/Username.dart';
+import 'package:birthday_calendor/screens/BaseScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'dart:async';
-import '../../main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,15 +17,28 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to the main page after 2 seconds
-    Timer(const Duration(seconds: 5), () {
+    _navigateToNextScreen();
+  }
+
+  Future<void> _navigateToNextScreen() async {
+    await Future.delayed(
+        const Duration(seconds: 5)); // Simulate splash duration
+    final box = await Hive.openBox('userBox');
+    final deviceName = box.get('DeviceName');
+    if (deviceName != null && deviceName.isNotEmpty) {
+      // Navigate to BaseScreen if DeviceName exists
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const Username(),
-        ),
+        MaterialPageRoute(builder: (context) => const BaseScreen()),
       );
-    });
+    } else {
+      // Navigate to Username screen if no DeviceName is saved
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Username()),
+      );
+    }
+    print("deviceName= " + deviceName);
   }
 
   @override

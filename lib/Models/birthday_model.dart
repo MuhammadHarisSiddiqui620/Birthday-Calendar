@@ -5,22 +5,26 @@ part 'birthday_model.g.dart';
 @HiveType(typeId: 1)
 class BirthdayModel extends HiveObject {
   @HiveField(0)
-  String name;
+  String DeviceName;
 
   @HiveField(1)
-  String date;
+  String birthdayName;
 
   @HiveField(2)
-  String alarmDay;
+  String date;
 
   @HiveField(3)
-  List<String> giftList;
+  String alarmDay;
 
   @HiveField(4)
+  List<String> giftList;
+
+  @HiveField(5)
   String image;
 
   BirthdayModel({
-    required this.name,
+    required this.DeviceName,
+    required this.birthdayName,
     required this.date,
     required this.alarmDay,
     required this.giftList,
