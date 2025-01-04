@@ -70,7 +70,6 @@ class Username extends StatelessWidget {
                           birthdayName:
                               '', // Add default or user-provided values
                           date: '', // Add default or user-provided values
-                          alarmDay: '', // Add default or user-provided values
                           giftList: [], // Add default or user-provided values
                           image: '', // Add default or user-provided values
                         );

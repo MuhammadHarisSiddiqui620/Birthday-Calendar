@@ -20,16 +20,15 @@ class BirthdayModelAdapter extends TypeAdapter<BirthdayModel> {
       DeviceName: fields[0] as String,
       birthdayName: fields[1] as String,
       date: fields[2] as String,
-      alarmDay: fields[3] as String,
-      giftList: (fields[4] as List).cast<String>(),
-      image: fields[5] as String,
+      giftList: (fields[3] as List).cast<String>(),
+      image: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, BirthdayModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.DeviceName)
       ..writeByte(1)
@@ -37,10 +36,8 @@ class BirthdayModelAdapter extends TypeAdapter<BirthdayModel> {
       ..writeByte(2)
       ..write(obj.date)
       ..writeByte(3)
-      ..write(obj.alarmDay)
-      ..writeByte(4)
       ..write(obj.giftList)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.image);
   }
 

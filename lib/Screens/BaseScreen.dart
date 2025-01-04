@@ -15,15 +15,15 @@ class BaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: HomeScreen(deviceName: deviceName),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    Key? key,
-  }) : super(key: key);
+  final String deviceName;
+
+  const HomeScreen({Key? key, required this.deviceName}) : super(key: key);
 
   static _HomeScreenState? of(BuildContext context) {
     return context.findAncestorStateOfType<_HomeScreenState>();
@@ -37,13 +37,20 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   // List of screens to display based on the selected index
-  final List<Widget> _screens = [
-    MainScreen(),
-    CalendorScreen(),
-    CreateBirthdayScreen(),
-    PostcardScreen(),
-    SearchScreen(),
-  ];
+  final List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add the MainScreen with the deviceName passed correctly
+    _screens.add(
+        MainScreen(deviceName: widget.deviceName)); // Use widget.deviceName
+    _screens.add(CalendorScreen());
+    _screens.add(CreateBirthdayScreen());
+    _screens.add(PostcardScreen());
+    _screens.add(SearchScreen());
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,14 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _screens[
-            _selectedIndex], // Display the screen based on the selected index
-        bottomNavigationBar: SizedBox(
-          height: 80,
-          child: BottomNavBar(
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-          ),
-        ));
+      body: _screens[
+          _selectedIndex], // Display the screen based on the selected index
+      bottomNavigationBar: SizedBox(
+        height: 80,
+        child: BottomNavBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
+      ),
+    );
   }
 }

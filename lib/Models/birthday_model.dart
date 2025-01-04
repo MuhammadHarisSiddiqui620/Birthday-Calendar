@@ -14,19 +14,15 @@ class BirthdayModel extends HiveObject {
   String date;
 
   @HiveField(3)
-  String alarmDay;
-
-  @HiveField(4)
   List<String> giftList;
 
-  @HiveField(5)
+  @HiveField(4)
   String image;
 
   BirthdayModel({
     required this.DeviceName,
     required this.birthdayName,
     required this.date,
-    required this.alarmDay,
     required this.giftList,
     required this.image,
   });

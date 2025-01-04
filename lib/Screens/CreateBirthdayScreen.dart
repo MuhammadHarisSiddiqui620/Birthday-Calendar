@@ -20,6 +20,8 @@ class CreateBirthdayScreen extends StatefulWidget {
 class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
   final ImagePicker _picker = ImagePicker();
   File? _imageFile;
+  final hiveBox = Hive.box<BirthdayModel>('birthday-db');
+  late File savedImage;
 
   Future<void> _pickImage() async {
     try {
@@ -32,15 +34,11 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
 
         // Save the image to Hive
         final appDir = await getApplicationDocumentsDirectory();
-        final hiveBox = Hive.box('birthday-db');
 
         // Save the file to app's directory
         final imagePath =
             '${appDir.path}/${DateTime.now().toIso8601String()}.png';
-        final savedImage = await _imageFile!.copy(imagePath);
-
-        // Save the path to Hive
-        await hiveBox.put('image', savedImage.path);
+        savedImage = await _imageFile!.copy(imagePath);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Image saved successfully!')),
@@ -84,11 +82,19 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
                 SizedBox(height: 54),
                 GestureDetector(
                   onTap: _pickImage,
-                  child: SvgPicture.asset(
-                    iconAsset,
-                    width: 100,
-                    height: 100,
-                  ),
+                  child: _imageFile == null
+                      ? SvgPicture.asset(
+                          iconAsset,
+                          width: 100,
+                          height: 100,
+                        )
+                      : Image.file(
+                          _imageFile!,
+                          width: 100,
+                          height: 100,
+                          fit:
+                              BoxFit.cover, // Optional: Adjust the image to fit
+                        ),
                 ),
                 SizedBox(height: 40),
                 TextField(
@@ -130,13 +136,39 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
                   style: primaryButton,
                   onPressed: () async {
                     final name = nameController.text.trim();
-                    if (name.isNotEmpty) {
-                      final box = Hive.box<BirthdayModel>('birthday-db');
+                    final selectedDate = value.isNotEmpty ? value.first : null;
+
+                    if (name.isNotEmpty && selectedDate != null) {
+                      // Create a new BirthdayModel instance
+                      final newBirthday = BirthdayModel(
+                        DeviceName: "",
+                        birthdayName: name,
+                        date: selectedDate.toString(),
+                        giftList: [], // Add gift list if applicable
+                        image: savedImage.path,
+                      );
+
+                      // Save to Hive
+                      await hiveBox.add(newBirthday);
+
+                      // Navigate to the next screen
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const PostcardScreen(),
                         ),
+                      );
+                      for (var i = 0; i < hiveBox.length; i++) {
+                        var birthdayModel = hiveBox.getAt(i);
+                        print("values: ${birthdayModel?.birthdayName}, "
+                            "${birthdayModel?.image}, "
+                            "${birthdayModel?.date}");
+                      }
+                    } else {
+                      // Show error if name or date is missing
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Please provide a name and date!')),
                       );
                     }
                   },

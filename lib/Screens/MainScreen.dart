@@ -2,7 +2,8 @@ import 'package:birthday_calendor/Components/CustomDateTimeline.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final String deviceName;
+  const MainScreen({super.key, required this.deviceName});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -23,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hi, Username!",
+              "Hi, ${widget.deviceName}!",
               style: TextStyle(
                   fontSize: 32,
                   color: Color(0xFF141522),
