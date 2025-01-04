@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'MainScreen.dart';
 
 class BaseScreen extends StatelessWidget {
-  const BaseScreen({super.key});
+  final String deviceName;
+
+  const BaseScreen({super.key, required this.deviceName});
 
   @override
   Widget build(BuildContext context) {

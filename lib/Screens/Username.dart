@@ -1,3 +1,4 @@
+import 'package:birthday_calendor/Models/birthday_model.dart';
 import 'package:birthday_calendor/Screens/BaseScreen.dart';
 import 'package:birthday_calendor/Screens/MainScreen.dart';
 import 'package:birthday_calendor/constants.dart';
@@ -62,12 +63,25 @@ class Username extends StatelessWidget {
                     onPressed: () async {
                       final name = nameController.text.trim();
                       if (name.isNotEmpty) {
-                        final box = await Hive.openBox('userBox');
-                        await box.put('DeviceName', name); // Save DeviceName
+                        final box = Hive.box<BirthdayModel>('birthday-db');
+                        // Create a BirthdayModel instance
+                        final birthdayModel = BirthdayModel(
+                          DeviceName: name, // Assign the name here
+                          birthdayName:
+                              '', // Add default or user-provided values
+                          date: '', // Add default or user-provided values
+                          alarmDay: '', // Add default or user-provided values
+                          giftList: [], // Add default or user-provided values
+                          image: '', // Add default or user-provided values
+                        );
+
+                        // Save the BirthdayModel instance in the box
+                        await box.put(
+                            'DeviceName', birthdayModel); // Save DeviceName
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const BaseScreen(),
+                            builder: (context) => BaseScreen(deviceName: name),
                           ),
                         );
                       }

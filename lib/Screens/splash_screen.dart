@@ -1,3 +1,4 @@
+import 'package:birthday_calendor/Models/birthday_model.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:birthday_calendor/screens/Username.dart';
 import 'package:birthday_calendor/screens/BaseScreen.dart';
@@ -22,23 +23,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToNextScreen() async {
     await Future.delayed(
-        const Duration(seconds: 5)); // Simulate splash duration
-    final box = await Hive.openBox('userBox');
-    final deviceName = box.get('DeviceName');
-    if (deviceName != null && deviceName.isNotEmpty) {
+        const Duration(seconds: 1)); // Simulate splash duration
+    final box = Hive.box<BirthdayModel>('birthday-db');
+
+    // Retrieve the instance of BirthdayModel using the key 'DeviceName'
+    final birthdayModel =
+        box.get('DeviceName'); // This is a BirthdayModel instance or null
+
+    if (birthdayModel != null && birthdayModel.DeviceName.isNotEmpty) {
       // Navigate to BaseScreen if DeviceName exists
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const BaseScreen()),
+        MaterialPageRoute(
+          builder: (context) =>
+              BaseScreen(deviceName: birthdayModel.DeviceName),
+        ),
       );
     } else {
       // Navigate to Username screen if no DeviceName is saved
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Username()),
+        MaterialPageRoute(
+          builder: (context) => const Username(),
+        ),
       );
     }
-    print("deviceName= " + deviceName);
+
+    print("deviceName= ${birthdayModel?.DeviceName ?? 'No DeviceName'}");
   }
 
   @override

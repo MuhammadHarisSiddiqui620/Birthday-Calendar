@@ -10,11 +10,14 @@ Future<void> main() async {
       BirthdayModelAdapter()); // Register the generated adapter
 
 /*  if (!Hive.isBoxOpen('alarm-db')) {
-    var box = await Hive.openBox<AlarmModel>('alarm-db');
+    var box = await Hive.openBox<BirthdayModel>('birthday-db');
     await box.clear(); // Only clear if successfully opened
   }*/
 
-  await Hive.openBox<BirthdayModel>('birthday-db'); //
+  // Ensure the box is only opened once
+  if (!Hive.isBoxOpen('birthday-db')) {
+    await Hive.openBox<BirthdayModel>('birthday-db');
+  }
 
   runApp(const MyApp());
 }
