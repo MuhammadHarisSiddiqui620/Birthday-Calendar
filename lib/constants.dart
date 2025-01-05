@@ -19,3 +19,9 @@ final primaryButton = ElevatedButton.styleFrom(
     borderRadius: BorderRadius.circular(30),
   ),
 );
+
+const thirdlyTextStyle = TextStyle(
+    color: Color(0xFF202020),
+    fontSize: 18,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w500);

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:birthday_calendor/Models/birthday_model.dart';
+import 'package:birthday_calendor/Screens/BirthdayScreen.dart';
 import 'package:birthday_calendor/Screens/PostcardScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -155,7 +156,8 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const PostcardScreen(),
+                          builder: (context) =>
+                              BirthdayScreen(birthdayItem: newBirthday),
                         ),
                       );
                       for (var i = 0; i < hiveBox.length; i++) {
