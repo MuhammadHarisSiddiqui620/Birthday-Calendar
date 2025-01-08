@@ -25,3 +25,21 @@ const thirdlyTextStyle = TextStyle(
     fontSize: 18,
     fontFamily: 'PlusJakartaSans',
     fontWeight: FontWeight.w500);
+
+const searchText = TextStyle(
+    color: Color(0xFF000000),
+    fontSize: 17,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w300);
+
+const birthdaySecondaryText = TextStyle(
+    color: Color(0xFF000000),
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w500);
+
+const birthdayFirstText = TextStyle(
+    color: Color(0xFF000000),
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w600);

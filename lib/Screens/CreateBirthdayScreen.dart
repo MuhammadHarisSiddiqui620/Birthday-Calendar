@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:birthday_calendor/Models/birthday_model.dart';
 import 'package:birthday_calendor/Screens/BirthdayScreen.dart';
 import 'package:birthday_calendor/Screens/PostcardScreen.dart';
+import 'package:birthday_calendor/Screens/SearchScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +138,9 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
                   style: primaryButton,
                   onPressed: () async {
                     final name = nameController.text.trim();
-                    final selectedDate = value.isNotEmpty ? value.first : null;
+                    final selectedDate = value.isNotEmpty
+                        ? value.toString().split(' ')[0]
+                        : null;
 
                     if (name.isNotEmpty && selectedDate != null) {
                       // Create a new BirthdayModel instance

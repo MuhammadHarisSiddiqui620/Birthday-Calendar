@@ -1,4 +1,5 @@
 import 'package:birthday_calendor/Models/birthday_model.dart';
+import 'package:birthday_calendor/Screens/BirthdayScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,12 +14,25 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final hiveBox = Hive.box<BirthdayModel>('birthday-db');
+  late List<BirthdayModel?> searchBirthdayItems;
+  String backgroundAsset = 'assets/splashscreen.svg';
+  final TextEditingController nameController = TextEditingController();
+  final box = Hive.box<BirthdayModel>('birthday-db');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchBirthdayItems = [];
+    for (var i = 0; i < hiveBox.length; i++) {
+      if (hiveBox.getAt(i)?.birthdayName != "") {
+        searchBirthdayItems.add(hiveBox.getAt(i));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    const String backgroundAsset = 'assets/splashscreen.svg';
-    final TextEditingController nameController = TextEditingController();
-
     return Stack(
       children: [
         SvgPicture.asset(
@@ -77,12 +91,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         color: Color(0xFFF9F9F9),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(
-                          Icons.delete_outline,
-                          size: 20,
-                          color: Color(0xFFD97474),
+                      child: Visibility(
+                        visible: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Icon(
+                            Icons.delete_outline,
+                            size: 20,
+                            color: Color(0xFFD97474),
+                          ),
                         ),
                       ),
                     )
@@ -91,11 +108,78 @@ class _SearchScreenState extends State<SearchScreen> {
                 SizedBox(
                   height: 15,
                 ),
+                Container(
+                  child: Container(
+                    child: Wrap(
+                      children: [
+                        for (var item in searchBirthdayItems)
+                          GestureDetector(
+                            child: SearchItems(birthdayitem: item),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BirthdayScreen(birthdayItem: item),
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 63,
+                ),
+                ElevatedButton(
+                  style: primaryButton,
+                  onPressed: () async {
+                    /*Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BirthdayScreen(: ),
+                        ),
+                      );*/
+                  },
+                  child: Text(
+                    'Search',
+                    style: TextStyle(
+                        color: Color(0xFFF3F3F3),
+                        fontSize: 16,
+                        fontWeight:
+                            FontWeight.w100), // ensure text color is white
+                  ),
+                ),
               ],
             )
           ],
         )
       ],
     );
+  }
+}
+
+class SearchItems extends StatelessWidget {
+  final BirthdayModel? birthdayitem;
+  const SearchItems({super.key, required this.birthdayitem});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFFF4F4F4),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              birthdayitem!.birthdayName,
+              textAlign: TextAlign.start,
+              style: searchText,
+            ),
+          ),
+        ));
   }
 }
