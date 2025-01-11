@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:hive/hive.dart';
 
 part 'birthday_model.g.dart';
@@ -11,12 +13,15 @@ class BirthdayModel extends HiveObject {
   String birthdayName;
 
   @HiveField(2)
-  String date;
+  DateTime date;
 
   @HiveField(3)
   List<String> giftList;
 
   @HiveField(4)
+  List<int> giftCost;
+
+  @HiveField(5)
   String image;
 
   BirthdayModel({
@@ -24,6 +29,7 @@ class BirthdayModel extends HiveObject {
     required this.birthdayName,
     required this.date,
     required this.giftList,
+    required this.giftCost,
     required this.image,
   });
 }

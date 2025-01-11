@@ -27,24 +27,45 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
 
   Future<void> _pickImage() async {
     try {
-      final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-      if (pickedFile != null) {
-        // Convert the picked file into a File object
-        setState(() {
-          _imageFile = File(pickedFile.path);
-        });
+      // Show a dialog for the user to select an option
+      final source = await showDialog<ImageSource>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Select Image Source'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, ImageSource.camera),
+              child: Text('Camera'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              child: Text('Gallery'),
+            ),
+          ],
+        ),
+      );
 
-        // Save the image to Hive
-        final appDir = await getApplicationDocumentsDirectory();
+      if (source != null) {
+        // Pick an image from the selected source
+        final pickedFile = await _picker.pickImage(source: source);
 
-        // Save the file to app's directory
-        final imagePath =
-            '${appDir.path}/${DateTime.now().toIso8601String()}.png';
-        savedImage = await _imageFile!.copy(imagePath);
+        if (pickedFile != null) {
+          setState(() {
+            _imageFile = File(pickedFile.path);
+          });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Image saved successfully!')),
-        );
+          // Save the image to Hive
+          final appDir = await getApplicationDocumentsDirectory();
+
+          // Save the file to the app's directory
+          final imagePath =
+              '${appDir.path}/${DateTime.now().toIso8601String()}.png';
+          savedImage = await _imageFile!.copy(imagePath);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Image saved successfully!')),
+          );
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -138,17 +159,16 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
                   style: primaryButton,
                   onPressed: () async {
                     final name = nameController.text.trim();
-                    final selectedDate = value.isNotEmpty
-                        ? value.toString().split(' ')[0]
-                        : null;
+                    final selectedDate = value.isNotEmpty ? value[0] : null;
 
                     if (name.isNotEmpty && selectedDate != null) {
                       // Create a new BirthdayModel instance
                       final newBirthday = BirthdayModel(
                         DeviceName: "",
                         birthdayName: name,
-                        date: selectedDate.toString(),
+                        date: selectedDate,
                         giftList: [], // Add gift list if applicable
+                        giftCost: [0],
                         image: savedImage.path,
                       );
 

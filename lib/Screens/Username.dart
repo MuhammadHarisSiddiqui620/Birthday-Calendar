@@ -69,8 +69,10 @@ class Username extends StatelessWidget {
                           DeviceName: name, // Assign the name here
                           birthdayName:
                               '', // Add default or user-provided values
-                          date: '', // Add default or user-provided values
+                          date: DateTime(
+                              0), // Add default or user-provided values
                           giftList: [], // Add default or user-provided values
+                          giftCost: [0],
                           image: '', // Add default or user-provided values
                         );
 
