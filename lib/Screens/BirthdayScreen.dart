@@ -323,7 +323,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                         controller: thirdgiftController,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
-                                          hintText: 'Cost',
+                                          hintText: 'Enter Gift',
                                         ),
                                       ),
                                     ),
@@ -334,7 +334,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                         controller: thirdCostController,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
-                                          hintText: 'Enter Gift',
+                                          hintText: 'Cost',
                                         ),
                                       ),
                                     ),
