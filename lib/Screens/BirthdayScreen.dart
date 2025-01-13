@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:birthday_calendor/Models/birthday_model.dart';
+import 'package:birthday_calendor/Screens/CreateBirthdayScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -203,10 +204,35 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 77, horizontal: 35),
+                    const EdgeInsets.symmetric(vertical: 25, horizontal: 35),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          child: Icon(
+                            Icons.more_horiz,
+                            color: Color(0xFF141522),
+                            size: 35,
+                          ),
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CreateBirthdayScreen(),
+                              ),
+                            );
+                            ;
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
                     if (widget.birthdayItem?.image != null)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
