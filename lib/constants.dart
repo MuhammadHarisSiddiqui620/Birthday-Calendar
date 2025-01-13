@@ -43,3 +43,9 @@ const birthdayFirstText = TextStyle(
     fontSize: 16,
     fontFamily: 'PlusJakartaSans',
     fontWeight: FontWeight.w600);
+
+const postCardInputText = TextStyle(
+    color: Color(0xFF000000),
+    fontSize: 13,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w500);

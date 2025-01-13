@@ -16,17 +16,38 @@ class BirthdayScreen extends StatefulWidget {
 }
 
 class _BirthdayScreenState extends State<BirthdayScreen> {
-  double _currentSliderValue = 100;
-  String backgroundAsset = 'assets/splashscreen.svg';
+  bool isWritingGift = false;
+  List<TextEditingController> giftControllers = [];
+  List<TextEditingController> costControllers = [];
 
-  bool isWritingGift = false; // State variable to toggle view
-  TextEditingController giftController = TextEditingController();
-  TextEditingController secondgiftController = TextEditingController();
-  TextEditingController thirdgiftController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
 
-  TextEditingController costController = TextEditingController();
-  TextEditingController secondCostController = TextEditingController();
-  TextEditingController thirdCostController = TextEditingController();
+    // Initialize controllers for each gift
+    for (int i = 0; i < 3; i++) {
+      giftControllers.add(TextEditingController());
+      costControllers.add(TextEditingController());
+
+      // Pre-fill controllers if data exists
+      if (widget.birthdayItem!.giftList.length > i) {
+        giftControllers[i].text = widget.birthdayItem!.giftList[i];
+        costControllers[i].text = widget.birthdayItem!.giftCost[i].toString();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers to prevent memory leaks
+    for (var controller in giftControllers) {
+      controller.dispose();
+    }
+    for (var controller in costControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   String calculateDaysUntilNextBirthday(DateTime birthday) {
     final today = DateTime.now();
@@ -63,22 +84,121 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
     return "$yearsUntilNextMilestone years";
   }
 
+  Row _buildGiftRow({
+    required int index,
+    required TextEditingController giftController,
+    required TextEditingController costController,
+  }) {
+    bool isGiftFilled = index < widget.birthdayItem!.giftList.length &&
+        widget.birthdayItem!.giftList[index].isNotEmpty &&
+        widget.birthdayItem!.giftCost[index] > 0;
+
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xFFF5F5F7),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Text("${index + 1}"),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: isGiftFilled
+              ? Text(
+                  "${widget.birthdayItem!.giftList[index]} - \$${widget.birthdayItem!.giftCost[index]}",
+                  style: birthdaySecondaryText,
+                )
+              : isWritingGift
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: giftController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter Gift',
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            controller: costController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Cost',
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isWritingGift = true;
+                        });
+                      },
+                      child: Text("Write...", style: birthdaySecondaryText),
+                    ),
+        ),
+      ],
+    );
+  }
+
+  void _saveGifts() {
+    List<String> giftList = [];
+    List<int> giftCost = [];
+
+    for (int i = 0; i < giftControllers.length; i++) {
+      if (giftControllers[i].text.trim().isNotEmpty &&
+          costControllers[i].text.trim().isNotEmpty) {
+        giftList.add(giftControllers[i].text.trim());
+        giftCost.add(int.parse(costControllers[i].text.trim()));
+      } else if (giftControllers[i].text.trim().isEmpty !=
+          costControllers[i].text.trim().isEmpty) {
+        /*ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text("Fill both Gift and Cost fields for Row ${i + 1}.")),
+        );*/
+        return;
+      }
+    }
+
+    setState(() {
+      widget.birthdayItem!.giftList = giftList;
+      widget.birthdayItem!.giftCost = giftCost;
+    });
+
+    try {
+      widget.birthdayItem!.save(); // Save to Hive or database
+      /*ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gifts saved successfully!")),
+      );*/
+    } catch (e) {
+      /*ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save gifts: $e")),
+      );*/
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate =
         DateFormat('dd.MM.yyyy').format(widget.birthdayItem!.date);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           SvgPicture.asset(
-            backgroundAsset,
+            'assets/splashscreen.svg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
-          // Foreground Content
           ListView(
             children: [
               Padding(
@@ -87,11 +207,9 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Display Image
                     if (widget.birthdayItem?.image != null)
                       ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(10.0), // Apply border radius
+                        borderRadius: BorderRadius.circular(10.0),
                         child: Image.file(
                           File(widget.birthdayItem!.image),
                           width: double.infinity,
@@ -99,9 +217,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                    SizedBox(
-                      height: 17,
-                    ),
+                    SizedBox(height: 17),
                     Text(
                       widget.birthdayItem!.birthdayName,
                       style: birthdayFirstText,
@@ -114,6 +230,9 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                           fontFamily: 'PlusJakartaSans',
                           fontWeight: FontWeight.w500),
                     ),
+                    SizedBox(height: 20),
+                    Divider(color: Colors.grey[300]),
+                    Text("Gift list", style: birthdayFirstText),
                     SizedBox(
                       height: 20,
                     ),
@@ -143,9 +262,6 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                       inactiveColor: Color(0xFFBAC8FF),
                       onChanged: (value) {},
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     Row(
                       children: [
                         Icon(Icons.schedule),
@@ -162,271 +278,26 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 21),
+                    for (int i = 0; i < 3; i++)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 21),
+                        child: _buildGiftRow(
+                          index: i,
+                          giftController: giftControllers[i],
+                          costController: costControllers[i],
+                        ),
+                      ),
                     SizedBox(
                       height: 35,
                     ),
-                    Divider(
-                      color: Colors.grey[300],
-                      height: 0.005,
-                    ),
-                    SizedBox(
-                      height: 34,
-                    ),
-                    Text(
-                      "Gift list",
-                      style: birthdayFirstText,
-                    ),
-                    SizedBox(
-                      height: 21,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFF5F5F7),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: Text("1"),
-                        ),
-                        SizedBox(width: 10),
-                        isWritingGift
-                            ? Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: giftController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Enter Gift',
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        controller: costController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Cost',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isWritingGift =
-                                        true; // Toggle to show TextField
-                                  });
-                                },
-                                child: Text("Write...",
-                                    style: birthdaySecondaryText),
-                              ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 21,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFF5F5F7),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: Text("2"),
-                        ),
-                        SizedBox(width: 10),
-                        isWritingGift
-                            ? Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: secondgiftController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Enter Gift',
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        controller: secondCostController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Cost',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (widget.birthdayItem!.giftList.isNotEmpty)
-                                    for (int i = 0;
-                                        i <
-                                            widget
-                                                .birthdayItem!.giftList.length;
-                                        i++)
-                                      Text(
-                                        "${widget.birthdayItem!.giftList[i]} - \$${widget.birthdayItem!.giftCost[i]}",
-                                        style: birthdaySecondaryText,
-                                      ),
-                                  if (widget.birthdayItem!.giftList.isEmpty)
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isWritingGift = true;
-                                        });
-                                      },
-                                      child: Text("Write...",
-                                          style: birthdaySecondaryText),
-                                    ),
-                                ],
-                              ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 21,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFF5F5F7),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: Text("3"),
-                        ),
-                        SizedBox(width: 10),
-                        isWritingGift
-                            ? Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: thirdgiftController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Enter Gift',
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        controller: thirdCostController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Cost',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isWritingGift =
-                                        true; // Toggle to show TextField
-                                  });
-                                },
-                                child: Text("Write...",
-                                    style: birthdaySecondaryText),
-                              ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
                     ElevatedButton(
                       style: primaryButton,
-                      onPressed: () async {
-                        List<String> giftList = [];
-                        List<int> giftCost = [];
-
-                        // Validate and collect gifts and costs
-                        if (giftController.text.trim().isNotEmpty &&
-                            costController.text.trim().isNotEmpty) {
-                          try {
-                            giftList.add(giftController.text.trim());
-                            giftCost.add(int.parse(costController.text.trim()));
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "Invalid cost input. Please enter a valid number.")),
-                            );
-                            return;
-                          }
-                        }
-
-                        if (secondgiftController.text.trim().isNotEmpty &&
-                            secondCostController.text.trim().isNotEmpty) {
-                          try {
-                            giftList.add(secondgiftController.text.trim());
-                            giftCost.add(
-                                int.parse(secondCostController.text.trim()));
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "Invalid cost input. Please enter a valid number.")),
-                            );
-                            return;
-                          }
-                        }
-
-                        if (thirdgiftController.text.trim().isNotEmpty &&
-                            thirdCostController.text.trim().isNotEmpty) {
-                          try {
-                            giftList.add(thirdgiftController.text.trim());
-                            giftCost.add(
-                                int.parse(thirdCostController.text.trim()));
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      "Invalid cost input. Please enter a valid number.")),
-                            );
-                            return;
-                          }
-                        }
-
-                        // Update the birthday item
-                        if (widget.birthdayItem != null) {
-                          setState(() {
-                            widget.birthdayItem!.giftList = giftList;
-                            widget.birthdayItem!.giftCost = giftCost;
-                            isWritingGift =
-                                false; // Switch back to display mode
-                          });
-                        }
-
-                        // Feedback message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text("Gift list updated successfully.")),
-                        );
-                      },
-                      child: Text("Save"),
+                      onPressed: _saveGifts,
+                      child: Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
