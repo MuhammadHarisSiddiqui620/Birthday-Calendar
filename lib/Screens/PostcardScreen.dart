@@ -31,25 +31,27 @@ class _PostcardScreenState extends State<PostcardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Birthday",
-                      style: TextStyle(
-                        fontSize: 32,
-                        color: Color(0xFF141522),
-                        fontFamily: 'PlusJakartaSans',
-                        fontWeight: FontWeight.w600,
+                    if (inputText.isEmpty)
+                      const Text(
+                        "Birthday",
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Color(0xFF141522),
+                          fontFamily: 'PlusJakartaSans',
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Choose your congratulations!",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF54577A),
-                        fontFamily: 'PlusJakartaSans',
-                        fontWeight: FontWeight.w500,
+                    if (inputText.isEmpty) const SizedBox(height: 8),
+                    if (inputText.isEmpty)
+                      const Text(
+                        "Choose your congratulations!",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF54577A),
+                          fontFamily: 'PlusJakartaSans',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 17),
                     if (selectedImage == null)
                       Wrap(
@@ -78,98 +80,100 @@ class _PostcardScreenState extends State<PostcardScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            selectedImage!,
-                            width: 347, // Larger width
-                            height: 214, // Larger height
-                            fit: BoxFit.cover,
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 3),
+                            ),
+                            child: Image.asset(
+                              selectedImage!,
+                              width: 347, // Larger width
+                              height: 214, // Larger height
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           const SizedBox(height: 26),
-                          if (inputText.isEmpty)
-                            Container(
-                              width: double.infinity,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
-                                child: Center(
-                                  child: Text(
-                                    "Select congratulation text",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontFamily: 'PlusJakartaSans',
-                                        fontWeight: FontWeight.w300),
+                          if (inputText.isEmpty) ...[
+                            TextField(
+                              minLines: 5,
+                              maxLines: null,
+                              controller: nameController,
+                              style: TextStyle(fontSize: 16),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(16),
                                   ),
                                 ),
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Color(0xFF152C8D),
+                                hintText: '...or write your own text',
+                                hintStyle: postCardInputText,
                               ),
                             ),
-                          const SizedBox(height: 20),
-                          TextField(
-                            minLines: 5,
-                            maxLines: null,
-                            controller: nameController,
-                            style: TextStyle(fontSize: 16),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: EdgeInsets.fromLTRB(20, 20, 20,
-                                  20), // control your hints text size
-                              //Change this value to custom as you like
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(16),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(100, 52),
+                                backgroundColor: Color(0xFF152C8D),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              hintText: '...or write your own textss',
-                              hintStyle: postCardInputText,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(100, 52),
-                              backgroundColor: Color(
-                                  0xFF152C8D), // make button background transparent
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            onPressed: () {
-                              setState(
-                                () {
+                              onPressed: () {
+                                setState(() {
                                   if (nameController.text.isNotEmpty) {
                                     inputText = nameController.text;
-                                  } // Reset to show all postcards
-                                },
-                              );
-                            },
-                            child: const Text(
-                              "Save",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          if (inputText.isNotEmpty)
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: Color(0xFF152C8D),
+                                  }
+                                });
+                              },
+                              child: const Text(
+                                "Save",
+                                style: TextStyle(color: Colors.white),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(inputText,
-                                    style: TextStyle(
+                            ),
+                          ] else
+                            Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.white, width: 2),
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Color(0xFF152C8D),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(
+                                      inputText,
+                                      style: TextStyle(
                                         color: Color(0xFFF3F3F3),
                                         fontSize: 16,
                                         fontFamily: 'PlusJakartaSans',
-                                        fontWeight: FontWeight.w300)),
-                              ),
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 32,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(48.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.file_download,
+                                      size: 36,
+                                    ),
+                                  ),
+                                )
+                              ],
                             )
                         ],
                       ),
