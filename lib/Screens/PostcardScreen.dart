@@ -1,5 +1,6 @@
 import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 
 class PostcardScreen extends StatefulWidget {
   const PostcardScreen({super.key});
@@ -12,6 +13,7 @@ class _PostcardScreenState extends State<PostcardScreen> {
   String? selectedImage; // State variable to track the selected image
   final TextEditingController nameController = TextEditingController();
   String inputText = "";
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   Widget build(BuildContext context) {

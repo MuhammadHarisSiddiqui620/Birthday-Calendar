@@ -28,6 +28,7 @@ dependencies:
   calendar_date_picker2: ^1.1.8
   image_picker: ^1.1.2
   path_provider: ^2.1.5
+  screenshot: ^3.0.0
 
 
 dev_dependencies:
