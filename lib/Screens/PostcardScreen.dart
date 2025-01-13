@@ -125,7 +125,7 @@ class _PostcardScreenState extends State<PostcardScreen> {
                                   Radius.circular(16),
                                 ),
                               ),
-                              hintText: '...or write your own text',
+                              hintText: '...or write your own textss',
                               hintStyle: postCardInputText,
                             ),
                           ),
