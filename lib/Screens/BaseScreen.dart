@@ -8,14 +8,15 @@ import 'package:flutter/material.dart';
 import 'MainScreen.dart';
 
 class BaseScreen extends StatelessWidget {
-  final String deviceName;
+  final String? deviceName;
 
-  const BaseScreen({super.key, required this.deviceName});
+  const BaseScreen({super.key, this.deviceName}); // Made deviceName optional
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(deviceName: deviceName),
+      home:
+          HomeScreen(deviceName: deviceName ?? 'User'), // Default value if null
     );
   }
 }

@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:birthday_calendor/Models/birthday_model.dart';
+import 'package:birthday_calendor/Screens/BaseScreen.dart';
 import 'package:birthday_calendor/Screens/CreateBirthdayScreen.dart';
 import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
@@ -167,6 +169,12 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
         );*/
         return;
       }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BaseScreen(),
+        ),
+      );
     }
 
     setState(() {
@@ -208,7 +216,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    /* Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GestureDetector(
@@ -218,18 +226,11 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                             size: 35,
                           ),
                           onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateBirthdayScreen(),
-                              ),
-                            );
-                            ;
+                            SystemNavigator.pop();
                           },
                         ),
                       ],
-                    ),
+                    ),*/
                     SizedBox(
                       height: 25,
                     ),
