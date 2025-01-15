@@ -1,5 +1,7 @@
-import 'package:birthday_calendor/Components/CustomDateTimeline.dart';
+import 'package:birthday_calendor/Components/CustomMiniCalendor.dart';
+import 'package:birthday_calendor/Models/birthday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MainScreen extends StatefulWidget {
   final String deviceName;
@@ -10,7 +12,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final hiveBox = Hive.box<BirthdayModel>('birthday-db');
+  late List<BirthdayModel?> searchBirthdayItems;
   DateTime _selectedDate = DateTime(2025, 6, 15); // Initial focused date
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchBirthdayItems = [];
+    for (var i = 0; i < hiveBox.length; i++) {
+      if (hiveBox.getAt(i)?.birthdayName != "") {
+        searchBirthdayItems.add(hiveBox.getAt(i));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +58,16 @@ class _MainScreenState extends State<MainScreen> {
             SizedBox(
               height: 50,
             ),
-            CustomDateTimeline(
-              firstDate: DateTime(2024, 3, 1),
-              lastDate: DateTime(2024, 3, 31),
-              focusedDate: _selectedDate,
-              onDateChange: (selectedDate) {
-                setState(() {
-                  _selectedDate = selectedDate;
-                });
-              },
-            ),
+            if (searchBirthdayItems.isNotEmpty)
+              ...searchBirthdayItems
+                  .map(
+                    (c) => Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 35.0), // Add spacing here
+                      child: CustomMiniCalendor(birthdayItem: c),
+                    ),
+                  )
+                  .toList(),
           ],
         ),
       ),

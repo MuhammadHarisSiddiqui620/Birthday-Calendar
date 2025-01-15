@@ -15,6 +15,19 @@ class _PostcardScreenState extends State<PostcardScreen> {
   String inputText = "";
   ScreenshotController screenshotController = ScreenshotController();
 
+  // Function to capture the screenshot
+  void captureScreenshot() async {
+    // Capture the screenshot of the widget
+    final image = await screenshotController.capture();
+
+    if (image != null) {
+      // You can save the image or share it as needed
+      print('Screenshot captured');
+    } else {
+      print('Screenshot Not captured');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,16 +175,20 @@ class _PostcardScreenState extends State<PostcardScreen> {
                                 SizedBox(
                                   height: 32,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(48.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.file_download,
-                                      size: 36,
+                                GestureDetector(
+                                  onTap:
+                                      captureScreenshot, // Capture screenshot on tap
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(48.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.file_download,
+                                        size: 36,
+                                      ),
                                     ),
                                   ),
                                 )
