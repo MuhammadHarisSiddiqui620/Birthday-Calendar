@@ -35,39 +35,43 @@ class _MainScreenState extends State<MainScreen> {
       width: double.infinity,
       color: Color(0xFFBAC8FF),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 60),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+        child: ListView(
           children: [
-            Text(
-              "Hi, ${widget.deviceName}!",
-              style: TextStyle(
-                  fontSize: 32,
-                  color: Color(0xFF141522),
-                  fontFamily: 'PlusJakartaSans',
-                  fontWeight: FontWeight.w600),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hi, ${widget.deviceName}!",
+                  style: TextStyle(
+                      fontSize: 32,
+                      color: Color(0xFF141522),
+                      fontFamily: 'PlusJakartaSans',
+                      fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  "Let's choose the right birthday!",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF54577A),
+                      fontFamily: 'PlusJakartaSans',
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                if (searchBirthdayItems.isNotEmpty)
+                  ...searchBirthdayItems
+                      .map(
+                        (c) => Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 30.0), // Add spacing here
+                          child: CustomMiniCalendor(birthdayItem: c),
+                        ),
+                      )
+                      .toList()
+              ],
             ),
-            Text(
-              "Let's choose the right birthday!",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF54577A),
-                  fontFamily: 'PlusJakartaSans',
-                  fontWeight: FontWeight.w500),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            if (searchBirthdayItems.isNotEmpty)
-              ...searchBirthdayItems
-                  .map(
-                    (c) => Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 35.0), // Add spacing here
-                      child: CustomMiniCalendor(birthdayItem: c),
-                    ),
-                  )
-                  .toList(),
           ],
         ),
       ),

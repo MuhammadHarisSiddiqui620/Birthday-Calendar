@@ -52,6 +52,6 @@ const postCardInputText = TextStyle(
 
 const miniCalendorDate = TextStyle(
     color: Color(0xFF24252C),
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'PlusJakartaSans',
-    fontWeight: FontWeight.w900);
+    fontWeight: FontWeight.w800);
