@@ -14,7 +14,8 @@ class CalendorScreen extends StatefulWidget {
 class _CalendorScreenState extends State<CalendorScreen> {
   final hiveBox = Hive.box<BirthdayModel>('birthday-db');
   late List<BirthdayModel?> searchBirthdayItems;
-  bool showFullCalendar = false; // Toggle state for full calendar
+  final Map<int, bool> calendarToggleStates =
+      {}; // Map to store toggle states for each calendar
 
   @override
   void initState() {
@@ -23,6 +24,8 @@ class _CalendorScreenState extends State<CalendorScreen> {
     for (var i = 0; i < hiveBox.length; i++) {
       if (hiveBox.getAt(i)?.birthdayName != "") {
         searchBirthdayItems.add(hiveBox.getAt(i));
+        calendarToggleStates[i] =
+            false; // Initialize all to false (show MiniCalendor initially)
       }
     }
   }
@@ -40,17 +43,21 @@ class _CalendorScreenState extends State<CalendorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: searchBirthdayItems.isNotEmpty
-                  ? searchBirthdayItems.map((birthday) {
+                  ? searchBirthdayItems.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      BirthdayModel? birthday = entry.value;
                       if (birthday == null) return const SizedBox.shrink();
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 30.0),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              showFullCalendar = !showFullCalendar;
+                              calendarToggleStates[index] =
+                                  !(calendarToggleStates[index] ?? false);
                             });
                           },
-                          child: showFullCalendar
+                          child: calendarToggleStates[index] ?? false
                               ? CustomCalendor(birthdayItem: birthday)
                               : CustomMiniCalendor(birthdayItem: birthday),
                         ),
