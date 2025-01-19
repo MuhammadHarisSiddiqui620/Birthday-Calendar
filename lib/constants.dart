@@ -55,3 +55,9 @@ const miniCalendorDate = TextStyle(
     fontSize: 14,
     fontFamily: 'PlusJakartaSans',
     fontWeight: FontWeight.w800);
+
+const mainScreenText = TextStyle(
+    color: Colors.black,
+    fontSize: 25,
+    fontFamily: 'PlusJakartaSans',
+    fontWeight: FontWeight.w500);

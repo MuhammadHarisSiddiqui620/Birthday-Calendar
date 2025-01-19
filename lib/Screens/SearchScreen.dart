@@ -15,20 +15,37 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final hiveBox = Hive.box<BirthdayModel>('birthday-db');
   late List<BirthdayModel?> searchBirthdayItems;
-  String backgroundAsset = 'assets/splashscreen.svg';
+  late List<BirthdayModel?> filteredBirthdayItems;
   final TextEditingController nameController = TextEditingController();
-  final box = Hive.box<BirthdayModel>('birthday-db');
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     searchBirthdayItems = [];
+    filteredBirthdayItems = [];
     for (var i = 0; i < hiveBox.length; i++) {
       if (hiveBox.getAt(i)?.birthdayName != "") {
         searchBirthdayItems.add(hiveBox.getAt(i));
       }
     }
+    filteredBirthdayItems.addAll(searchBirthdayItems);
+
+    nameController.addListener(() {
+      _filterBirthdayItems();
+    });
+  }
+
+  void _filterBirthdayItems() {
+    String query = nameController.text.trim().toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        filteredBirthdayItems = List.from(searchBirthdayItems);
+      } else {
+        filteredBirthdayItems = searchBirthdayItems
+            .where((item) => item!.birthdayName.toLowerCase().startsWith(query))
+            .toList();
+      }
+    });
   }
 
   @override
@@ -36,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Stack(
       children: [
         SvgPicture.asset(
-          backgroundAsset,
+          "assets/splashscreen.svg",
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.cover,
@@ -59,9 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: nameController,
                   style: TextStyle(fontSize: 16),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal:
-                            20), //Change this value to custom as you like
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(30),
@@ -112,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Container(
                     child: Wrap(
                       children: [
-                        for (var item in searchBirthdayItems)
+                        for (var item in filteredBirthdayItems)
                           GestureDetector(
                             child: SearchItems(birthdayitem: item),
                             onTap: () {

@@ -1,5 +1,6 @@
 import 'package:birthday_calendor/Components/CustomMiniCalendor.dart';
 import 'package:birthday_calendor/Models/birthday_model.dart';
+import 'package:birthday_calendor/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -60,16 +61,21 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(
                   height: 50,
                 ),
-                if (searchBirthdayItems.isNotEmpty)
-                  ...searchBirthdayItems
-                      .map(
-                        (c) => Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 30.0), // Add spacing here
-                          child: CustomMiniCalendor(birthdayItem: c),
-                        ),
-                      )
-                      .toList()
+                if (searchBirthdayItems.isNotEmpty) ...[
+                  // Expand the list into children
+                  ...searchBirthdayItems.map(
+                    (c) => Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 30.0), // Add spacing here
+                      child: CustomMiniCalendor(birthdayItem: c),
+                    ),
+                  ),
+                ] else
+                  Text(
+                    'Add a birthday by clicking on the "+" button',
+                    style: mainScreenText,
+                    textAlign: TextAlign.center,
+                  ),
               ],
             ),
           ],

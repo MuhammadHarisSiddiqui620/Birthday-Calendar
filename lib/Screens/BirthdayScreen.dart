@@ -68,23 +68,57 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
 
   String calculateYearUntilNextBirthday(DateTime birthday) {
     final today = DateTime.now();
+
+    // Calculate the current age
     int currentAge = today.year - birthday.year;
 
-    // If the birthday hasn't occurred this year yet, subtract 1 from the current age
-    if (DateTime(today.year, birthday.month, birthday.day).isAfter(today)) {
-      currentAge--;
+    final thisYearBirthday = DateTime(today.year, birthday.month, birthday.day);
+
+    // If the birthday this year is in the past, calculate for next year
+    final nextBirthday = thisYearBirthday.isBefore(today)
+        ? DateTime(today.year + 1, birthday.month, birthday.day)
+        : thisYearBirthday;
+
+    final difference = nextBirthday.difference(today).inDays;
+
+    final thisYearBirthdays =
+        DateTime(today.year, birthday.month, birthday.day);
+
+    // If the birthday this year is in the past, calculate for next year
+    final nextBirthdays = thisYearBirthdays.isBefore(today)
+        ? DateTime(today.year + 1, birthday.month, birthday.day)
+        : thisYearBirthdays;
+
+    final differences = nextBirthdays.difference(today).inDays;
+
+    print('BirthdayScreen birthday day ${birthday.day}');
+    print('BirthdayScreen birthday month ${birthday.month}');
+    print('BirthdayScreen birthday year ${birthday.year}');
+    print('BirthdayScreen today day ${today.day}');
+    print('BirthdayScreen today month ${today.month}');
+    print('BirthdayScreen today year ${today.year}');
+    print('BirthdayScreen currentAge ${currentAge}');
+    print('BirthdayScreen difference ${difference}');
+    print('BirthdayScreen difference.inDays ${difference}');
+
+    if (!(currentAge < 1)) {
+      return "$currentAge years";
+    } else if (!(currentAge < 1) && !(difference < 1)) {
+      return "$difference months";
+    } else if (differences < 30) {
+      return "${differences} days";
     }
+    return "No days";
 
-    // Calculate the next milestone birthday (e.g., 30, 40, etc.)
-    int nextMilestoneAge = ((currentAge ~/ 10) + 1) * 10;
-
-    // Calculate the year when the next milestone birthday will occur
-    int milestoneYear = birthday.year + nextMilestoneAge;
-
-    // Calculate the difference in years
-    int yearsUntilNextMilestone = milestoneYear - today.year;
-
-    return "$yearsUntilNextMilestone years";
+/*    if (difference.inDays < 30) {
+      return "${difference.inDays} days";
+    } else if (difference.inDays < 365) {
+      int monthsUntilNextMilestone = (difference.inDays / 30).floor();
+      return "$monthsUntilNextMilestone months";
+    } else {
+      int yearsUntilNextMilestone = difference.inDays ~/ 365;
+      return "$yearsUntilNextMilestone years";
+    }*/
   }
 
   Row _buildGiftRow({

@@ -72,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _screens[
           _selectedIndex], // Display the screen based on the selected index
       bottomNavigationBar: SizedBox(
-        height: 80,
         child: BottomNavBar(
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
