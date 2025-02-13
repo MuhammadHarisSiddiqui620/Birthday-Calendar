@@ -1,40 +1,68 @@
-# Alarm Clock App ⏰
+# Birthday Calendar App 🎉
 
-A simple and user-friendly alarm clock app built using Flutter, which allows users to set alarms with custom labels and specific time inputs. The app is designed with an intuitive interface for easy navigation, supports multiple alarms, and allows for full customization of the alarm notifications. 
+A user-friendly Birthday Calendar app for Android and iOS that helps users keep track of important birthdays. The app provides an intuitive interface for adding birthdays, viewing upcoming celebrations, creating gift lists, and even sending personalized greeting cards. 
 
 
 ## Features ✨
 
-- **Custom Alarm Labels**: Users can set a name for each alarm (e.g., "Meeting", "Workout").
-- **Time Input**: A dedicated text field where users can enter time in 24-hour format (`00:00` to `24:00`).
-- **Alarm Notifications**: The app triggers notifications along with sound, vibration, and the option to loop audio.
-- **Multiple Alarms**: Supports the creation of multiple alarms with unique labels.
-- **SVG Assets**: Clean and lightweight vector assets are used for icons and illustrations.
+- **User Profile**: Enter and personalize your username.
+- **Birthday Management**: Add, edit, and delete birthdays with detailed profiles.
+- **Calendar View**: Displays all added birthdays and upcoming celebrations.
+- **Gift Planning**: Create a list of gifts along with their costs.
+- **Greeting Cards**: Select, customize, and send digital greeting cards.
+- **Search Functionality**: Quickly find profiles by name.
 
 ## Screens 🚀
 
 The app consists of several key screens:
 
-### 1. **Alarm List Screen**
-   - Displays a list of all the active alarms.
-   - Horizontal scrolling for selecting days of the week.
-   - A floating button at the bottom to add a new alarm.
+### 1. **Loading Screen**
+   - The first screen that appears when the app starts.
 
-![Alarms (1)](https://github.com/user-attachments/assets/853d95ad-997e-44af-9121-13971832268a)
+![image](https://github.com/user-attachments/assets/69612bc1-fd27-40b8-8a10-ef2871893069)
 
-### 2. **New Alarm Screen**
-   - Allows users to set a new alarm with:
-     - **Alarm Name**: A text field to name the alarm.
-     - **Time Input**: A special field to enter time in `00:00` format (range: 00:00 to 24:00).
-   - Button to confirm and set the alarm.
 
-![Alarms (2)](https://github.com/user-attachments/assets/17f740e6-458c-413e-bc14-60ad572ad80a)
+### 2. **Username Entry Screen**
+   - Users enter their name, which will be used in the app.
 
-### 3. **Alarm Set Confirmation**
-   - A screen confirming that the alarm has been successfully set with a summary of alarm details.
-   - Displays the time and label of the alarm.
+![image](https://github.com/user-attachments/assets/c9952d08-e1c0-431f-9090-4a6ead6e6cc5)
 
-![Week](https://github.com/user-attachments/assets/93108a75-32bd-4d57-834e-39fed76a0f64)
+
+### 3. **Main Screen**
+   - Displays a greeting with the user's name.
+   - Shows a calendar with upcoming birthdays.
+
+![image](https://github.com/user-attachments/assets/9410445b-e7ad-436e-8803-e713c4b03e43)
+
+
+### 4. **Questionnaire Screen**
+   - Allows users to add a birthday with details.
+   - **Features**:
+     - Add a photo
+     - Select a birth date (with a countdown to the event)
+     - Create a gift list with costs 
+   - Swipe up to return to the home screen.
+
+![image](https://github.com/user-attachments/assets/583250c2-e51b-4cc4-8468-5ec0c307988d)
+
+
+### 5. **Calendar Screen**
+   - Displays all saved birthdays on a calendar.
+
+![image](https://github.com/user-attachments/assets/3bcddccf-d0ce-4087-b4c7-4120ad910dfc)
+
+
+### 6. **Postcard Screen**
+   - Choose a greeting card, add a message, and save/send it.
+
+![image](https://github.com/user-attachments/assets/c72b37aa-5564-43f2-aedc-a2b6b6675da1)
+
+
+### 3. **Profile Search Screen**
+   - Search for a birthday profile by name.
+
+![image](https://github.com/user-attachments/assets/75db9bdc-bec1-436d-9803-312dc8a03318)
+
 
 ## Installation 🔧
 
@@ -42,4 +70,5 @@ To run the app locally on your device or emulator:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/MuhammadHarisSiddiqui620/alarm_clock.git
+   git clone https://github.com/your-repo-name/birthday_calendar.git
+
