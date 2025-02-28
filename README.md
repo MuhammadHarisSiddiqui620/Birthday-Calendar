@@ -58,7 +58,7 @@ The app consists of several key screens:
 ![image](https://github.com/user-attachments/assets/c72b37aa-5564-43f2-aedc-a2b6b6675da1)
 
 
-### 3. **Profile Search Screen**
+### 7. **Profile Search Screen**
    - Search for a birthday profile by name.
 
 ![image](https://github.com/user-attachments/assets/75db9bdc-bec1-436d-9803-312dc8a03318)
