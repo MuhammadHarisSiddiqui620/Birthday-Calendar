@@ -76,7 +76,7 @@ class _CreateBirthdayScreenState extends State<CreateBirthdayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String backgroundAsset = 'assets/splashscreen.svg';
+    const String backgroundAsset = 'assets/background_wallpaper.svg';
     final TextEditingController nameController = TextEditingController();
     const String iconAsset = 'assets/ic_upload.svg';
     List<DateTime?> value = const [];

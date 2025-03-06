@@ -11,7 +11,7 @@ class Username extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String backgroundAsset = 'assets/splashscreen.svg';
+    const String backgroundAsset = 'assets/background_wallpaper.svg';
 
     final TextEditingController nameController = TextEditingController();
 

@@ -53,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Stack(
       children: [
         SvgPicture.asset(
-          "assets/splashscreen.svg",
+          "assets/background_wallpaper.svg",
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.cover,
